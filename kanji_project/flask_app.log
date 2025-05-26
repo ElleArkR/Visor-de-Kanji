@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/app/kanji_project/run.py", line 1, in <module>
+    from app import create_app
+  File "/app/kanji_project/app/__init__.py", line 1, in <module>
+    from flask import Flask
+ModuleNotFoundError: No module named 'flask'
