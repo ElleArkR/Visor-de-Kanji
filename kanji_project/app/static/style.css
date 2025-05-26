@@ -100,6 +100,45 @@ main {
     border: 1px solid #ccc;
 }
 
+.hanzi-writer-target {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000; /* Black border as requested */
+    margin-top: 10px;
+    margin-bottom: 10px; /* Added some margin for spacing */
+    display: flex; /* Optional: For aligning placeholder text if any */
+    justify-content: center; /* Optional: For aligning placeholder text */
+    align-items: center; /* Optional: For aligning placeholder text */
+    font-size: 0.8em; /* For placeholder text */
+    color: #888; /* For placeholder text */
+}
+
+.example-words-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.example-words-container h3 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: #444;
+}
+
+.example-words-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.example-word-item {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
 footer {
     text-align: center;
     margin-top: 30px;

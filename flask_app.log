@@ -6,10 +6,10 @@ Press CTRL+C to quit
  * Restarting with stat
  * Debugger is active!
  * Debugger PIN: 307-084-118
-127.0.0.1 - - [26/May/2025 06:00:23] "GET /api/kanji/日 HTTP/1.1" 200 -
-127.0.0.1 - - [26/May/2025 06:00:23] "GET /api/search/kanji?query=sun HTTP/1.1" 200 -
-127.0.0.1 - - [26/May/2025 06:00:23] "GET /api/kanji/愛 HTTP/1.1" 404 -
-127.0.0.1 - - [26/May/2025 06:00:23] "GET /api/search/kanji?query=xyz HTTP/1.1" 200 -
-127.0.0.1 - - [26/May/2025 06:00:23] "HEAD /data/svgs/06728.svg HTTP/1.1" 200 -
-127.0.0.1 - - [26/May/2025 06:00:23] "GET /data/svgs/06728.svg HTTP/1.1" 200 -
-127.0.0.1 - - [26/May/2025 06:00:24] "HEAD / HTTP/1.1" 200 -
+127.0.0.1 - - [26/May/2025 06:29:12] "GET /api/kanji/日 HTTP/1.1" 200 -
+127.0.0.1 - - [26/May/2025 06:29:12] "GET /api/kanji/校 HTTP/1.1" 200 -
+127.0.0.1 - - [26/May/2025 06:29:12] "GET /api/kanji/大 HTTP/1.1" 200 -
+127.0.0.1 - - [26/May/2025 06:29:12] "GET /api/kanji/学 HTTP/1.1" 200 -
+127.0.0.1 - - [26/May/2025 06:29:12] "GET /api/kanji/一 HTTP/1.1" 200 -
+127.0.0.1 - - [26/May/2025 06:29:12] "GET /api/kanji/二 HTTP/1.1" 200 -
+127.0.0.1 - - [26/May/2025 06:29:12] "GET /api/kanji/三 HTTP/1.1" 200 -

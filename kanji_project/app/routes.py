@@ -68,6 +68,27 @@ def get_kanji(kanji_char):
         return jsonify({"error": "Kanji not found"}), 404
         
     kanji_details = _row_to_dict(row)
+
+    if kanji_details: # If kanji was found and processed
+        kanji_id = kanji_details.get("id")
+        if kanji_id is not None:
+            cursor.execute("""
+                SELECT w.word, w.reading, w.meaning_es, w.jlpt_level_word
+                FROM example_words w
+                JOIN kanji_example_word_assoc a ON w.id = a.word_id
+                WHERE a.kanji_id = ?
+                ORDER BY w.jlpt_level_word DESC, w.id
+            """, (kanji_id,))
+            example_word_rows = cursor.fetchall()
+            
+            example_words_list = []
+            for word_row in example_word_rows:
+                example_words_list.append(dict(word_row)) # Convert sqlite3.Row to dict
+            
+            kanji_details["example_words"] = example_words_list
+        else:
+            kanji_details["example_words"] = [] # Should not happen if kanji_details is valid
+    
     return jsonify(kanji_details)
 
 @api_bp.route('/search/kanji', methods=['GET'])

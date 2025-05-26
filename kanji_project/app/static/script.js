@@ -94,17 +94,43 @@ document.addEventListener('DOMContentLoaded', () => {
             appendList(kanjiDiv, 'Lecturas On\'yomi:', kanji.on_readings);   // On'yomi with apostrophe
 
             if (kanji.svg_filename) {
-                const svgContainer = document.createElement('div');
-                svgContainer.className = 'kanji-svg-container';
+                const animationTargetDiv = document.createElement('div');
+                // Use a class for styling, and potentially a unique ID if multiple writers are on page
+                // For now, a generic ID for the first result, or use a class and pass the element.
+                // If displaying multiple results, each would need its own target.
+                // Let's make it a unique ID per kanji result for clarity if HanziWriter is used per character.
+                animationTargetDiv.id = `hanzi-writer-target-${kanji.unicode}`; 
+                animationTargetDiv.className = 'hanzi-writer-target'; 
+                kanjiDiv.appendChild(animationTargetDiv); // Add to DOM before trying to animate
                 
-                const svgImg = document.createElement('img');
-                svgImg.src = `/data/svgs/${kanji.svg_filename}`;
-                svgImg.alt = `Orden de trazos para ${kanji.kanji_char}`;
-                svgImg.onerror = () => { 
-                    svgContainer.innerHTML = '<p>Diagrama de trazos no disponible.</p>';
-                };
-                svgContainer.appendChild(svgImg);
-                kanjiDiv.appendChild(svgContainer);
+                // Initiate SVG fetching and animation
+                loadAndAnimateSvg(kanji.svg_filename, animationTargetDiv, kanji.kanji_char);
+            }
+
+            // Display Example Words
+            if (kanji.example_words && kanji.example_words.length > 0) {
+                const examplesContainer = document.createElement('div');
+                examplesContainer.className = 'example-words-container';
+                
+                const examplesTitle = document.createElement('h3');
+                examplesTitle.textContent = 'Palabras de Ejemplo:';
+                examplesContainer.appendChild(examplesTitle);
+                
+                const examplesList = document.createElement('ul');
+                examplesList.className = 'example-words-list';
+                kanji.example_words.forEach(ex => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'example-word-item';
+                    
+                    let textContent = `${ex.word} (${ex.reading}): ${ex.meaning_es}`;
+                    if (ex.jlpt_level_word) {
+                        textContent += ` [JLPT N${ex.jlpt_level_word}]`;
+                    }
+                    listItem.textContent = textContent;
+                    examplesList.appendChild(listItem);
+                });
+                examplesContainer.appendChild(examplesList);
+                kanjiDiv.appendChild(examplesContainer);
             }
 
             resultsSection.appendChild(kanjiDiv);
@@ -145,6 +171,79 @@ document.addEventListener('DOMContentLoaded', () => {
             p.appendChild(strong);
             p.appendChild(document.createTextNode('No disponible'));
             parent.appendChild(p);
+        }
+    }
+
+    async function loadAndAnimateSvg(svgFilename, targetDiv, kanjiChar) {
+        targetDiv.innerHTML = '<p>Cargando diagrama...</p>'; // Initial loading message
+
+        try {
+            const response = await fetch(`/data/svgs/${svgFilename}`);
+            if (!response.ok) {
+                throw new Error(`No se pudo cargar el archivo SVG: ${response.status} ${response.statusText}`);
+            }
+            const svgText = await response.text();
+
+            targetDiv.innerHTML = ''; // Clear loading message
+
+            // Parse SVG text and append to target
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
+            const svgElement = svgDoc.documentElement;
+
+            if (svgElement.nodeName === 'parsererror' || !svgElement.querySelector('path')) {
+                console.error("Error parsing SVG or SVG has no paths:", svgText);
+                targetDiv.innerHTML = '<p>Error al procesar el diagrama de trazos.</p>';
+                return;
+            }
+            
+            svgElement.setAttribute('width', '100%');
+            svgElement.setAttribute('height', '100%');
+            svgElement.removeAttribute('id'); // Remove potential duplicate IDs
+
+            targetDiv.appendChild(svgElement);
+
+            // Select all path elements that are direct children of 'g' elements,
+            // or all path elements if no groups are used in a specific SVG structure.
+            // KanjiVG SVGs typically have paths within a <g id="kvg:StrokePaths_...">
+            // and individual strokes can be <path id="kvg:StrokeNumbers_...">
+            // For simplicity, selecting all paths and relying on their DOM order.
+            const paths = Array.from(svgElement.querySelectorAll('path'));
+            
+            // Filter out paths that might be part of number annotations if they have a specific class or attribute
+            // For KanjiVG, stroke paths usually don't have 'fill' but numbers might. This is a heuristic.
+            // A more robust way would be to select paths within specific groups if KanjiVG structure is consistent.
+            // For now, assume all paths are strokes to be animated.
+            // const strokePaths = paths.filter(p => !p.getAttribute('fill') || p.getAttribute('fill') === 'none');
+
+
+            for (const path of paths) {
+                const length = path.getTotalLength();
+                path.style.strokeDasharray = length;
+                path.style.strokeDashoffset = length;
+                path.style.stroke = '#000000'; // Black color for strokes
+                path.style.strokeWidth = '3';   // Stroke width
+                path.style.fill = 'none';       // Ensure strokes are not filled
+
+                // Clear any pre-existing animations/transitions from SVG if any
+                path.style.transition = 'none'; 
+
+                const animation = path.animate([
+                    { strokeDashoffset: length },
+                    { strokeDashoffset: 0 }
+                ], {
+                    duration: 800, // Duration for each stroke animation (adjustable)
+                    easing: 'linear',
+                    fill: 'forwards'
+                });
+
+                await animation.finished;
+                await new Promise(resolve => setTimeout(resolve, 150)); // Short delay between strokes
+            }
+
+        } catch (error) {
+            console.error(`Error al cargar o animar SVG para ${kanjiChar}:`, error);
+            targetDiv.innerHTML = `<p>Diagrama de trazos no disponible para ${kanjiChar}.</p>`;
         }
     }
 });

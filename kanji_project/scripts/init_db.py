@@ -3,7 +3,7 @@ import json
 import os
 
 DATABASE_PATH = os.path.join("kanji_project", "kanji.db")
-JSON_DATA_PATH = os.path.join("kanji_project", "data", "kanji_data.json")
+JSON_DATA_PATH = os.path.join("kanji_project", "data", "kanji_data_n5.json") # Changed to N5 data file
 SVG_BASE_DIR_IN_STATIC = "svgs" # This is relative to the static folder, if we decide to serve them
 
 def get_db_connection():
@@ -11,9 +11,11 @@ def get_db_connection():
     conn = sqlite3.connect(DATABASE_PATH)
     return conn
 
-def create_kanjis_table(conn):
-    """Creates the 'kanjis' table if it doesn't exist."""
+def ensure_schema(conn):
+    """Ensures all necessary tables exist in the database."""
     cursor = conn.cursor()
+
+    # Create 'kanjis' table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS kanjis (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,8 +30,33 @@ def create_kanjis_table(conn):
         svg_filename TEXT
     )
     """)
-    conn.commit()
     print("Table 'kanjis' ensured to exist.")
+
+    # Create 'example_words' table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS example_words (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        word TEXT NOT NULL,
+        reading TEXT NOT NULL,
+        meaning_es TEXT NOT NULL,
+        jlpt_level_word INTEGER 
+    )
+    """)
+    print("Table 'example_words' ensured to exist.")
+
+    # Create 'kanji_example_word_assoc' table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS kanji_example_word_assoc (
+        kanji_id INTEGER NOT NULL,
+        word_id INTEGER NOT NULL,
+        PRIMARY KEY (kanji_id, word_id),
+        FOREIGN KEY (kanji_id) REFERENCES kanjis (id) ON DELETE CASCADE,
+        FOREIGN KEY (word_id) REFERENCES example_words (id) ON DELETE CASCADE
+    )
+    """)
+    print("Table 'kanji_example_word_assoc' ensured to exist.")
+    
+    conn.commit()
 
 def format_svg_filename(unicode_hex):
     """Formats the Unicode hex string to a 5-digit zero-padded SVG filename."""
@@ -47,15 +74,17 @@ def main():
     """Initializes the database, creates tables, and populates them with data."""
     if not os.path.exists(JSON_DATA_PATH):
         print(f"Error: JSON data file not found at {JSON_DATA_PATH}")
-        print("Please run the fetch_kanji_data.py script first.")
+        print("Please run the fetch_kanji_data.py script first, or ensure the JSON file path is correct.")
         return
 
     conn = None
-    inserted_count = 0
+    inserted_count = 0 # This count is for kanjis, will remain for now.
     try:
         conn = get_db_connection()
-        create_kanjis_table(conn)
+        ensure_schema(conn) # Call the updated schema function
 
+        # The rest of the script populates the 'kanjis' table.
+        # This part remains unchanged for this subtask.
         with open(JSON_DATA_PATH, 'r', encoding='utf-8') as f:
             kanji_data_list = json.load(f)
 
