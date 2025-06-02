@@ -1,0 +1,223 @@
+/* Global Resets and Base Styles */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #f0f2f5;
+    color: #333;
+    line-height: 1.6;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+header h1 {
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #2c3e50;
+    font-weight: 700;
+    font-size: 2.8em;
+}
+
+/* Main Content Area */
+main {
+    background-color: transparent; /* Removed white background for a cleaner look with cards */
+    padding: 0; /* Padding will be on individual cards */
+    border-radius: 0; /* No global border radius for main */
+    box-shadow: none; /* Shadow will be on cards */
+    max-width: 900px;
+    margin: 0 auto; /* Center main content */
+}
+
+/* Search Section */
+#search-section {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#search-input {
+    padding: 12px 18px;
+    font-size: 1em;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    margin-right: 12px;
+    width: 350px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    color: #333;
+}
+
+#search-input:focus {
+    outline: none;
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+#search-button {
+    padding: 12px 25px;
+    font-size: 1em;
+    background-color: #4a90e2; /* Primary blue */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
+}
+
+#search-button:hover {
+    background-color: #357ABD; /* Darker blue */
+}
+
+/* Results Section - No specific styling, acts as a container for cards */
+#results-section {
+    /* min-height: 100px; */ /* Can be removed or adjusted */
+}
+
+/* Individual Kanji Info Card */
+.kanji-info {
+    background-color: #fff;
+    margin-bottom: 25px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e0e0e0;
+}
+
+.kanji-info h2 {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 3.5em; /* Larger Kanji character */
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center; /* Center the Kanji character */
+    line-height: 1.2;
+}
+
+.kanji-main-info-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.hanzi-writer-target {
+    width: 180px; /* Slightly smaller SVG */
+    height: 180px;
+    border: 1px solid #e0e0e0; /* Softer border */
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8em;
+    color: #888;
+    flex-shrink: 0;
+    /* margin: 0 auto 15px auto; */ /* Centering if it were a block on its own */
+}
+
+.kanji-text-details-container {
+    flex: 1;
+    min-width: 220px;
+}
+
+.kanji-text-details-container h3 {
+    font-size: 1.1em;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    font-weight: 500;
+}
+
+.kanji-info p strong {
+    font-weight: 500; /* Medium weight for labels */
+    color: #555;
+}
+
+.kanji-info ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 5px;
+}
+
+.kanji-info ul li {
+    background-color: #e9eff5; /* Light blue-gray tint */
+    color: #334e68; 
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+
+/* Example Words Section */
+.example-words-container {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #e8e8e8;
+}
+
+.example-words-container h3 {
+    margin-bottom: 12px;
+    font-size: 1.25em;
+    color: #333;
+    font-weight: 500;
+}
+
+.example-words-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.example-word-item {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    font-size: 0.95em;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    font-size: 0.9em;
+    color: #777;
+}
+
+/* Responsive Adjustments (Example) */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    #search-input {
+        width: 70%;
+    }
+    .kanji-main-info-wrapper {
+        flex-direction: column; /* Stack SVG and text on small screens */
+        align-items: center; /* Center items when stacked */
+    }
+    .hanzi-writer-target {
+        margin-right: 0; /* Remove right margin when stacked */
+        margin-bottom: 20px;
+    }
+    .kanji-info h2 {
+        font-size: 3em;
+    }
+}
